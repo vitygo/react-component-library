@@ -1,0 +1,7 @@
+:root {
+    --rraui-primary-bg-color: #007bff;
+    --rraui-primary-bg-hover: #0e82fe;
+    --rraui-glass-bg: rgba(255, 255, 255, 0.2);
+   --rraui-glass-border: rgba(255, 255, 255, 0.1);
+    --rraui-font-family: 'Inter', sans-serif;
+  }
