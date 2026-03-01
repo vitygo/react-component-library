@@ -1,35 +1,91 @@
+import React, { forwardRef } from 'react';
+import { clsx } from 'clsx';
 import styles from './Button.module.css';
-import { clsx } from 'clsx'; // Utility to combine classes
 
-interface ButtonProps {
-  label: string;
-  primary?: boolean;
-  glass?: boolean;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label?: string;
+  variant?: 'primary' | 'secondary' | 'glass' | 'danger' | 'ghost' | 'outline';
   size?: 'small' | 'medium' | 'large';
-  onClick?: () => void;
+  shape?: 'square' | 'sharp' | 'rounded' | 'pill'; 
+  textColor?: string;
+  bgColor?: string;
+  borderColor?: string;
+  leftIcon?: React.ReactNode;  
+  rightIcon?: React.ReactNode;
+  isLoading?: boolean;
 }
 
-export const Button = ({ 
-  label, 
-  primary = false, 
-  glass = false, 
-  size = 'medium', 
-  ...props 
-}: ButtonProps) => {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ 
+    label, 
+    variant = 'primary', 
+    size = 'medium', 
+    shape = 'rounded', 
+    className, 
+    isLoading, 
+    leftIcon, 
+    rightIcon,
+    disabled, 
+    children,
+    type = 'button', 
+    textColor,
+    bgColor,
+    borderColor,
+    ...props 
+  }, ref) => {
+    
+    const isIconOnly = !label && !children && (leftIcon || rightIcon);
 
-  const classes = clsx(
-    styles.base,
-    styles[size],
-    {
-      [styles.primary]: primary && !glass,   
-      [styles.secondary]: !primary && !glass, 
-      [styles.glass]: glass,        
-    }
-  );
+    const classes = clsx(
+      styles.base,
+      styles[variant],
+      styles[size],
+      styles[shape], 
+      {
+        [styles.loading]: isLoading,
+        [styles.iconOnly]: isIconOnly,
+      },
+      className
+    );
 
-  return (
-    <button className={classes} {...props}>
-      {label}
-    </button>
-  );
-};
+    const customStyles = {
+        backgroundColor: bgColor,
+        color: textColor,
+        borderColor: borderColor,
+        ...props.style 
+      };
+
+    return (
+      <button 
+        ref={ref} 
+        type={type}
+        className={classes} 
+        disabled={disabled || isLoading} 
+        style={customStyles}
+        {...props}
+      >
+       
+        {isLoading && <span className={styles.spinner} />}
+        
+
+        {!isLoading && leftIcon && (
+          <span className={styles.icon}>{leftIcon}</span>
+        )}
+        
+      
+        {(label || children) && (
+          <span className={styles.label}>
+            {label || children}
+          </span>
+        )}
+        
+       
+        {!isLoading && rightIcon && (
+          <span className={styles.icon}>{rightIcon}</span>
+        )}
+      </button>
+    );
+  }
+);
+
+Button.displayName = 'Button';

@@ -16,7 +16,7 @@
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
     },
-  "./style.css": "./dist/reactrauilib.css",
+    "./style.css": "./dist/reactrauilib.css",
     "./dist/*": "./dist/*"
   },
   "scripts": {
